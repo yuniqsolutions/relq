@@ -1,0 +1,162 @@
+import format from "../addon/pg-format/index.js";
+function isColumnRef(value) {
+    return typeof value === 'object' && value !== null && value.__type === 'column_ref';
+}
+function isSqlExpression(value) {
+    return typeof value === 'object' && value !== null && value.__type === 'sql_expression';
+}
+export function createExcludedProxy() {
+    return new Proxy({}, {
+        get(_target, prop) {
+            return { __type: 'column_ref', table: 'EXCLUDED', column: prop };
+        }
+    });
+}
+export function createRowProxy(tableName) {
+    return new Proxy({}, {
+        get(_target, prop) {
+            return { __type: 'column_ref', table: tableName, column: prop };
+        }
+    });
+}
+function columnRefToSql(ref) {
+    return format('%I.%I', ref.table, ref.column);
+}
+function valueToSql(value) {
+    if (isColumnRef(value)) {
+        return columnRefToSql(value);
+    }
+    if (isSqlExpression(value)) {
+        return value.sql;
+    }
+    if (typeof value === 'number' || typeof value === 'bigint') {
+        return String(value);
+    }
+    return format('%L', value);
+}
+export function createSqlHelpers(currentColumn, tableName) {
+    return {
+        increment(amount) {
+            return {
+                __type: 'sql_expression',
+                sql: `${format('%I.%I', tableName, currentColumn)} + ${amount}`
+            };
+        },
+        add(a, b) {
+            return {
+                __type: 'sql_expression',
+                sql: `${valueToSql(a)} + ${valueToSql(b)}`
+            };
+        },
+        subtract(a, b) {
+            return {
+                __type: 'sql_expression',
+                sql: `${valueToSql(a)} - ${valueToSql(b)}`
+            };
+        },
+        coalesce(...values) {
+            const sqlValues = values.map(v => valueToSql(v)).join(', ');
+            return {
+                __type: 'sql_expression',
+                sql: `COALESCE(${sqlValues})`
+            };
+        },
+        raw(sql) {
+            return { __type: 'sql_expression', sql };
+        },
+        greatest(...values) {
+            const sqlValues = values.map(v => valueToSql(v)).join(', ');
+            return {
+                __type: 'sql_expression',
+                sql: `GREATEST(${sqlValues})`
+            };
+        },
+        least(...values) {
+            const sqlValues = values.map(v => valueToSql(v)).join(', ');
+            return {
+                __type: 'sql_expression',
+                sql: `LEAST(${sqlValues})`
+            };
+        }
+    };
+}
+export class ConflictBuilder {
+    _action = 'nothing';
+    _updateData = {};
+    _whereClause;
+    _tableName;
+    constructor(tableName) {
+        this._tableName = tableName;
+    }
+    doNothing() {
+        this._action = 'nothing';
+        this._updateData = {};
+        return this;
+    }
+    doUpdate(values) {
+        this._action = 'update';
+        const excludedProxy = createExcludedProxy();
+        const rowProxy = createRowProxy(this._tableName);
+        for (const [column, value] of Object.entries(values)) {
+            if (typeof value === 'function') {
+                const fn = value;
+                const sqlHelpers = createSqlHelpers(column, this._tableName);
+                let result;
+                if (fn.length === 1) {
+                    result = fn(excludedProxy);
+                }
+                else if (fn.length === 2) {
+                    result = fn(excludedProxy, sqlHelpers);
+                }
+                else {
+                    result = fn(excludedProxy, sqlHelpers, rowProxy);
+                }
+                this._updateData[column] = result;
+            }
+            else {
+                this._updateData[column] = value;
+            }
+        }
+        return this;
+    }
+    where(condition) {
+        this._whereClause = condition;
+        return this;
+    }
+    get action() {
+        return this._action;
+    }
+    get updateData() {
+        return this._updateData;
+    }
+    get whereClause() {
+        return this._whereClause;
+    }
+    get tableName() {
+        return this._tableName;
+    }
+}
+export function buildConflictUpdateSql(updateData, tableName) {
+    const setClauses = [];
+    for (const [column, value] of Object.entries(updateData)) {
+        if (isColumnRef(value)) {
+            setClauses.push(`${format('%I', column)} = ${columnRefToSql(value)}`);
+        }
+        else if (isSqlExpression(value)) {
+            setClauses.push(`${format('%I', column)} = ${value.sql}`);
+        }
+        else if (Array.isArray(value)) {
+            if (value.length === 0) {
+                setClauses.push(`${format('%I', column)} = ARRAY[]::jsonb[]`);
+            }
+            else {
+                const jsonValues = value.map(v => format('%L', JSON.stringify(v))).join(',');
+                setClauses.push(`${format('%I', column)} = ARRAY[${jsonValues}]::jsonb[]`);
+            }
+        }
+        else {
+            setClauses.push(format('%I = %L', column, value));
+        }
+    }
+    return setClauses.join(', ');
+}

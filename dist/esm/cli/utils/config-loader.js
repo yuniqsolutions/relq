@@ -1,0 +1,112 @@
+import { loadConfig as baseLoadConfig } from "../../config/config.js";
+import { loadEnvConfig } from "./env-loader.js";
+import * as fs from 'fs';
+import * as path from 'path';
+const CONFIG_FILENAMES = [
+    'relq.config.ts',
+    'relq.config.js',
+    'relq.config.mjs',
+];
+export function findConfigFile(cwd = process.cwd()) {
+    for (const filename of CONFIG_FILENAMES) {
+        const filepath = path.join(cwd, filename);
+        if (fs.existsSync(filepath)) {
+            return filepath;
+        }
+    }
+    return null;
+}
+export function findConfigFileRecursive(startDir = process.cwd()) {
+    let currentDir = path.resolve(startDir);
+    const root = path.parse(currentDir).root;
+    while (currentDir !== root) {
+        const found = findConfigFile(currentDir);
+        if (found) {
+            return { path: found, directory: currentDir };
+        }
+        currentDir = path.dirname(currentDir);
+    }
+    return null;
+}
+export function configExists(cwd = process.cwd()) {
+    return findConfigFile(cwd) !== null;
+}
+export async function loadConfigWithEnv(configPath) {
+    let config;
+    if (configPath) {
+        config = await baseLoadConfig(configPath);
+    }
+    else {
+        const foundPath = findConfigFile();
+        if (foundPath) {
+            config = await baseLoadConfig(foundPath);
+        }
+        else {
+            config = {};
+        }
+    }
+    if (!config.connection?.host && !config.connection?.url) {
+        const envConfig = loadEnvConfig();
+        if (envConfig) {
+            config = {
+                ...config,
+                connection: {
+                    ...config.connection,
+                    ...envConfig,
+                },
+            };
+        }
+    }
+    return config;
+}
+export function validateConfig(config) {
+    const errors = [];
+    if (!config.connection?.host && !config.connection?.url) {
+        errors.push('No database connection configured. Set connection in relq.config.ts or use DATABASE_* env vars.');
+    }
+    const hasSchemaPath = typeof config.schema === 'string' && config.schema.length > 0;
+    const hasSchemaDir = typeof config.schema === 'object' && config.schema?.directory;
+    const hasTypeGenOutput = config.typeGeneration?.output;
+    const hasGenerateOutDir = config.generate?.outDir;
+    if (!hasSchemaPath && !hasSchemaDir && !hasTypeGenOutput && !hasGenerateOutDir) {
+        errors.push('No schema output path configured. Set schema, generate.outDir, or typeGeneration.output in relq.config.ts.');
+    }
+    return errors;
+}
+export async function requireValidConfig(config, options) {
+    const errors = validateConfig(config);
+    if (errors.length === 0)
+        return;
+    const colors = {
+        red: (s) => `\x1b[31m${s}\x1b[0m`,
+        yellow: (s) => `\x1b[33m${s}\x1b[0m`,
+        cyan: (s) => `\x1b[36m${s}\x1b[0m`,
+        bold: (s) => `\x1b[1m${s}\x1b[0m`,
+    };
+    const isInteractive = process.stdin.isTTY && process.stdout.isTTY;
+    if (options?.autoComplete !== false && isInteractive) {
+        try {
+            const { initCommand } = await import("../commands/init.js");
+            const { findProjectRoot } = await import("./project-root.js");
+            const projectRoot = findProjectRoot() || process.cwd();
+            const flags = {};
+            if (options?.calledFrom) {
+                flags['called-from'] = options.calledFrom;
+            }
+            await initCommand({ args: [], flags, config, projectRoot });
+            return;
+        }
+        catch (e) {
+            process.exit(1);
+        }
+    }
+    console.error('');
+    console.error(colors.red('error:') + ' Configuration errors:');
+    for (const error of errors) {
+        console.error(`   ${colors.yellow('•')} ${error}`);
+    }
+    console.error('');
+    console.error(colors.yellow('hint:') + ` Run ${colors.cyan('relq init')} to create a configuration file or check your config settings.`);
+    console.error('');
+    process.exit(1);
+}
