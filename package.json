@@ -1,0 +1,67 @@
+{
+  "name": "relq",
+  "version": "1.0.49",
+  "description": "The Fully-Typed PostgreSQL ORM for TypeScript",
+  "author": "Olajide Mathew O. <olajide.mathew@yuniq.solutions>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yuniqsolutions/relq.git"
+  },
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "relq": "./dist/bin/relq.js"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    },
+    "./config": {
+      "import": "./dist/config.js",
+      "require": "./dist/config.cjs",
+      "types": "./dist/config/index.d.ts"
+    },
+    "./schema-builder": {
+      "import": "./dist/schema-builder.js",
+      "require": "./dist/schema-builder.cjs",
+      "types": "./dist/schema-builder.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "postgresql",
+    "postgres",
+    "query-builder",
+    "typescript",
+    "orm",
+    "database",
+    "sql",
+    "type-safe",
+    "tree-shakeable",
+    "zero-dependencies"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@aws-sdk/dsql-signer": "^3.962.0",
+    "@pgsql/types": "^17.6.2",
+    "cli-spinners": "^3.3.0",
+    "jiti": "^2.6.1",
+    "ora": "^9.0.0",
+    "pgsql-deparser": "^17.17.0",
+    "pgsql-parser": "^17.9.9",
+    "sql-formatter": "^15.6.12",
+    "strip-comments": "^2.0.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}
