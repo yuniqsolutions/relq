@@ -1,0 +1,15 @@
+import { Relq, RelqPostgres, RelqNile } from "./core/relq-client.js";
+const schema = {};
+const pg1 = new Relq(schema, 'postgres');
+const nile1 = new Relq(schema, 'nile');
+const crdb1 = new Relq(schema, 'cockroachdb');
+const dsql1 = new Relq(schema, 'awsdsql');
+const pg2 = new Relq(schema, 'postgres', { host: 'localhost' });
+const nile2 = new Relq(schema, 'nile', { host: 'db.thenile.dev' });
+const pg3 = new RelqPostgres(schema);
+const nile3 = new RelqNile(schema);
+pg1.subscribe;
+nile1.subscribe;
+nile1.setTenant;
+pg1.setTenant;
+console.log('All type checks passed!');
