@@ -1,0 +1,13 @@
+import { createColumn } from "./column-builder.js";
+export const int4range = () => createColumn('INT4RANGE');
+export const int8range = () => createColumn('INT8RANGE');
+export const numrange = () => createColumn('NUMRANGE');
+export const tsrange = () => createColumn('TSRANGE');
+export const tstzrange = () => createColumn('TSTZRANGE');
+export const daterange = () => createColumn('DATERANGE');
+export const int4multirange = () => createColumn('INT4MULTIRANGE');
+export const int8multirange = () => createColumn('INT8MULTIRANGE');
+export const nummultirange = () => createColumn('NUMMULTIRANGE');
+export const tsmultirange = () => createColumn('TSMULTIRANGE');
+export const tstzmultirange = () => createColumn('TSTZMULTIRANGE');
+export const datemultirange = () => createColumn('DATEMULTIRANGE');

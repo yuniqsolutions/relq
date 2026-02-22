@@ -1,0 +1,31 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PG_CAPABILITIES = void 0;
+exports.PG_CAPABILITIES = {
+    returning: true,
+    lateral: true,
+    distinctOn: true,
+    listenNotify: true,
+    pooling: true,
+    cursors: true,
+    jsonb: true,
+    arrays: true,
+    ranges: true,
+    fullTextSearch: true,
+    upsert: true,
+    forUpdateSkipLocked: true,
+    windowFunctions: true,
+    cte: true,
+    recursiveCte: true,
+    explainAnalyze: true,
+    savepoints: true,
+    createTableAs: true,
+    materializedViews: true,
+    storedProcedures: true,
+    triggers: true,
+    sequences: true,
+    copy: true,
+    vacuum: true,
+    identifierQuote: '"',
+    parameterStyle: 'dollar',
+};

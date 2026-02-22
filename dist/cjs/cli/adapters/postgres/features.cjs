@@ -1,0 +1,133 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.FEATURE_DISPLAY_NAMES = exports.POSTGRES_FEATURES = void 0;
+exports.getPostgresFeatures = getPostgresFeatures;
+exports.isFeatureSupported = isFeatureSupported;
+exports.getUnsupportedFeatures = getUnsupportedFeatures;
+exports.POSTGRES_FEATURES = {
+    supportsJson: true,
+    supportsJsonb: true,
+    supportsArrays: true,
+    supportsEnums: true,
+    supportsUuid: true,
+    supportsSerial: true,
+    supportsIdentity: true,
+    supportsBigint: true,
+    supportsDecimal: true,
+    supportsGeometry: true,
+    supportsTimestampTz: true,
+    supportsInterval: true,
+    supportsRangeTypes: true,
+    supportsCompositeTypes: true,
+    supportsNetworkTypes: true,
+    supportsFullTextSearch: true,
+    supportsDeferrableConstraints: true,
+    supportsExcludeConstraints: true,
+    supportsGeneratedColumns: true,
+    supportsPartialIndexes: true,
+    supportsCoveringIndexes: true,
+    supportsBtreeIndex: true,
+    supportsHashIndex: true,
+    supportsGistIndex: true,
+    supportsGinIndex: true,
+    supportsBrinIndex: true,
+    supportsSpGistIndex: true,
+    supportsSchemas: true,
+    supportsTablePartitioning: true,
+    supportsTableInheritance: true,
+    supportsMaterializedViews: true,
+    supportsForeignTables: true,
+    supportsTriggers: true,
+    supportsStoredProcedures: true,
+    supportsSequences: true,
+    supportsDomains: true,
+    supportsTransactions: true,
+    supportsSavepoints: true,
+    supportsIsolationLevels: true,
+    supportsReadOnlyTransactions: true,
+    supportsWindowFunctions: true,
+    supportsCTE: true,
+    supportsRecursiveCTE: true,
+    supportsLateralJoin: true,
+    supportsReturning: true,
+    supportsOnConflict: true,
+    supportsDistinctOn: true,
+    supportsGroupingSets: true,
+    supportsFilter: true,
+    supportsListenNotify: true,
+    supportsLogicalReplication: true,
+    supportsComments: true,
+    supportsExtensions: true,
+    supportsCopyCommand: true,
+};
+function getPostgresFeatures() {
+    return exports.POSTGRES_FEATURES;
+}
+function isFeatureSupported(features, feature) {
+    return features[feature] === true;
+}
+function getUnsupportedFeatures(features) {
+    const unsupported = [];
+    for (const [key, value] of Object.entries(features)) {
+        if (value === false && exports.POSTGRES_FEATURES[key] === true) {
+            unsupported.push(key);
+        }
+    }
+    return unsupported;
+}
+exports.FEATURE_DISPLAY_NAMES = {
+    supportsJson: 'JSON data type',
+    supportsJsonb: 'JSONB data type',
+    supportsArrays: 'Array types',
+    supportsEnums: 'Enum types',
+    supportsUuid: 'UUID type',
+    supportsSerial: 'SERIAL/BIGSERIAL',
+    supportsIdentity: 'IDENTITY columns',
+    supportsBigint: 'BIGINT type',
+    supportsDecimal: 'DECIMAL/NUMERIC',
+    supportsGeometry: 'Geometry types (PostGIS)',
+    supportsTimestampTz: 'TIMESTAMP WITH TIME ZONE',
+    supportsInterval: 'INTERVAL type',
+    supportsRangeTypes: 'Range types',
+    supportsCompositeTypes: 'Composite types',
+    supportsNetworkTypes: 'Network types (INET, CIDR)',
+    supportsFullTextSearch: 'Full-text search',
+    supportsDeferrableConstraints: 'Deferrable constraints',
+    supportsExcludeConstraints: 'EXCLUDE constraints',
+    supportsGeneratedColumns: 'Generated columns',
+    supportsPartialIndexes: 'Partial indexes',
+    supportsCoveringIndexes: 'Covering indexes (INCLUDE)',
+    supportsBtreeIndex: 'B-tree indexes',
+    supportsHashIndex: 'Hash indexes',
+    supportsGistIndex: 'GiST indexes',
+    supportsGinIndex: 'GIN indexes',
+    supportsBrinIndex: 'BRIN indexes',
+    supportsSpGistIndex: 'SP-GiST indexes',
+    supportsSchemas: 'Schemas',
+    supportsTablePartitioning: 'Table partitioning',
+    supportsTableInheritance: 'Table inheritance',
+    supportsMaterializedViews: 'Materialized views',
+    supportsForeignTables: 'Foreign tables',
+    supportsTriggers: 'Triggers',
+    supportsStoredProcedures: 'Stored procedures',
+    supportsSequences: 'Sequences',
+    supportsDomains: 'Domains',
+    supportsTransactions: 'Transactions',
+    supportsSavepoints: 'Savepoints',
+    supportsIsolationLevels: 'Isolation levels',
+    supportsReadOnlyTransactions: 'Read-only transactions',
+    supportsWindowFunctions: 'Window functions',
+    supportsCTE: 'Common Table Expressions',
+    supportsRecursiveCTE: 'Recursive CTEs',
+    supportsLateralJoin: 'LATERAL joins',
+    supportsReturning: 'RETURNING clause',
+    supportsOnConflict: 'ON CONFLICT (upsert)',
+    supportsDistinctOn: 'DISTINCT ON',
+    supportsGroupingSets: 'GROUPING SETS/CUBE/ROLLUP',
+    supportsFilter: 'FILTER clause',
+    supportsListenNotify: 'LISTEN/NOTIFY',
+    supportsLogicalReplication: 'Logical replication',
+    supportsComments: 'Object comments',
+    supportsExtensions: 'Extensions',
+    supportsCopyCommand: 'COPY command',
+};

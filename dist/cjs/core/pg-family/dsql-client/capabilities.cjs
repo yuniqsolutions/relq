@@ -1,0 +1,31 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DSQL_CAPABILITIES = void 0;
+exports.DSQL_CAPABILITIES = {
+    returning: true,
+    lateral: true,
+    distinctOn: true,
+    listenNotify: false,
+    pooling: true,
+    cursors: true,
+    jsonb: false,
+    arrays: false,
+    ranges: false,
+    fullTextSearch: false,
+    upsert: true,
+    forUpdateSkipLocked: true,
+    windowFunctions: true,
+    cte: true,
+    recursiveCte: true,
+    explainAnalyze: true,
+    savepoints: true,
+    createTableAs: true,
+    materializedViews: true,
+    storedProcedures: false,
+    triggers: false,
+    sequences: false,
+    copy: true,
+    vacuum: false,
+    identifierQuote: '"',
+    parameterStyle: 'dollar',
+};

@@ -1,0 +1,96 @@
+{
+  "name": "relq",
+  "version": "1.0.116",
+  "description": "The Fully-Typed PostgreSQL ORM for TypeScript",
+  "author": "Olajide Mathew O. <olajide.mathew@yuniq.solutions>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yuniqsolutions/relq.git"
+  },
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "relq": "./dist/bin/relq.js"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    },
+    "./config": {
+      "import": "./dist/config.js",
+      "require": "./dist/config.cjs",
+      "types": "./dist/config/index.d.ts"
+    },
+    "./pg-builder": {
+      "import": "./dist/pg-builder.js",
+      "require": "./dist/pg-builder.cjs",
+      "types": "./dist/pg-builder.d.ts"
+    },
+    "./cockroachdb-builder": {
+      "import": "./dist/cockroachdb-builder.js",
+      "require": "./dist/cockroachdb-builder.cjs",
+      "types": "./dist/cockroachdb-builder.d.ts"
+    },
+    "./dsql-builder": {
+      "import": "./dist/dsql-builder.js",
+      "require": "./dist/dsql-builder.cjs",
+      "types": "./dist/dsql-builder.d.ts"
+    },
+    "./nile-builder": {
+      "import": "./dist/nile-builder.js",
+      "require": "./dist/nile-builder.cjs",
+      "types": "./dist/nile-builder.d.ts"
+    },
+    "./sqlite-builder": {
+      "import": "./dist/sqlite-builder.js",
+      "require": "./dist/sqlite-builder.cjs",
+      "types": "./dist/sqlite-builder.d.ts"
+    },
+    "./turso-builder": {
+      "import": "./dist/turso-builder.js",
+      "require": "./dist/turso-builder.cjs",
+      "types": "./dist/turso-builder.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "postgresql",
+    "postgres",
+    "query-builder",
+    "typescript",
+    "orm",
+    "database",
+    "sql",
+    "type-safe",
+    "tree-shakeable",
+    "zero-dependencies"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@aws-sdk/dsql-signer": "^3.983.0",
+    "@clack/prompts": "^1.0.0",
+    "@pgsql/types": "^17.6.2",
+    "citty": "^0.2.0",
+    "cli-spinners": "^3.4.0",
+    "jiti": "^2.6.1",
+    "ora": "^9.2.0",
+    "pg": "^8.18.0",
+    "pg-cursor": "^2.17.0",
+    "pgsql-deparser": "^17.17.2",
+    "pgsql-parser": "^17.9.11",
+    "sql-formatter": "^15.7.0",
+    "strip-comments": "^2.0.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

@@ -1,0 +1,14 @@
+import { createColumn, createColumnWithName } from "./column-builder.js";
+export const oid = () => createColumn('OID');
+export const regclass = () => createColumn('REGCLASS');
+export const regproc = () => createColumn('REGPROC');
+export const regtype = () => createColumn('REGTYPE');
+export const pgLsn = () => createColumn('PG_LSN');
+export const pgSnapshot = () => createColumn('PG_SNAPSHOT');
+export const citext = (columnName) => createColumnWithName('CITEXT', columnName);
+export const ltree = (columnName) => createColumnWithName('LTREE', columnName);
+export const lquery = (columnName) => createColumnWithName('LQUERY', columnName);
+export const ltxtquery = (columnName) => createColumnWithName('LTXTQUERY', columnName);
+export const hstore = (columnName) => createColumnWithName('HSTORE', columnName);
+export const cube = (columnName) => createColumnWithName('CUBE', columnName);
+export const semver = (columnName) => createColumnWithName('SEMVER', columnName);
