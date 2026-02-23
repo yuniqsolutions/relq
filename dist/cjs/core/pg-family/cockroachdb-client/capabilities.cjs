@@ -1,0 +1,31 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.COCKROACHDB_CAPABILITIES = void 0;
+exports.COCKROACHDB_CAPABILITIES = {
+    returning: true,
+    lateral: true,
+    distinctOn: true,
+    listenNotify: false,
+    pooling: true,
+    cursors: true,
+    jsonb: true,
+    arrays: true,
+    ranges: false,
+    fullTextSearch: false,
+    upsert: true,
+    forUpdateSkipLocked: true,
+    windowFunctions: true,
+    cte: true,
+    recursiveCte: true,
+    explainAnalyze: true,
+    savepoints: true,
+    createTableAs: true,
+    materializedViews: true,
+    storedProcedures: true,
+    triggers: true,
+    sequences: true,
+    copy: true,
+    vacuum: true,
+    identifierQuote: '"',
+    parameterStyle: 'dollar',
+};

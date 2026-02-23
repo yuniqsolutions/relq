@@ -1,0 +1,17 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const relq_client_1 = require("./core/relq-client.cjs");
+const schema = {};
+const pg1 = new relq_client_1.Relq(schema, 'postgres');
+const nile1 = new relq_client_1.Relq(schema, 'nile');
+const crdb1 = new relq_client_1.Relq(schema, 'cockroachdb');
+const dsql1 = new relq_client_1.Relq(schema, 'awsdsql');
+const pg2 = new relq_client_1.Relq(schema, 'postgres', { host: 'localhost' });
+const nile2 = new relq_client_1.Relq(schema, 'nile', { host: 'db.thenile.dev' });
+const pg3 = new relq_client_1.RelqPostgres(schema);
+const nile3 = new relq_client_1.RelqNile(schema);
+pg1.subscribe;
+nile1.subscribe;
+nile1.setTenant;
+pg1.setTenant;
+console.log('All type checks passed!');
