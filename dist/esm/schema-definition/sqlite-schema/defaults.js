@@ -1,0 +1,31 @@
+function createDefault(sql) {
+    return { $sql: sql, $isDefault: true };
+}
+export const SQLITE_DEFAULT = {
+    currentTimestamp: () => createDefault('CURRENT_TIMESTAMP'),
+    currentDate: () => createDefault('CURRENT_DATE'),
+    currentTime: () => createDefault('CURRENT_TIME'),
+    datetime: (modifier) => createDefault(modifier ? `(datetime('now', '${modifier}'))` : `(datetime('now'))`),
+    date: (modifier) => createDefault(modifier ? `(date('now', '${modifier}'))` : `(date('now'))`),
+    time: (modifier) => createDefault(modifier ? `(time('now', '${modifier}'))` : `(time('now'))`),
+    julianDay: () => createDefault(`(julianday('now'))`),
+    unixEpoch: () => createDefault(`(unixepoch('now'))`),
+    unixEpochMs: () => createDefault(`(unixepoch('now') * 1000)`),
+    uuid: () => createDefault(`(lower(hex(randomblob(4))) || '-' || lower(hex(randomblob(2))) || '-4' || substr(lower(hex(randomblob(2))),2) || '-' || substr('89ab',abs(random()) % 4 + 1, 1) || substr(lower(hex(randomblob(2))),2) || '-' || lower(hex(randomblob(6))))`),
+    randomHex: (bytes) => createDefault(`(lower(hex(randomblob(${bytes}))))`),
+    random: () => createDefault('(abs(random()) / 9223372036854775807.0)'),
+    randomInt: (max) => createDefault(`(abs(random()) % ${max})`),
+    emptyObject: () => createDefault(`'{}'`),
+    emptyArray: () => createDefault(`'[]'`),
+    json: (value) => createDefault(`'${value.replace(/'/g, "''")}'`),
+    true: () => createDefault('1'),
+    false: () => createDefault('0'),
+    null: () => createDefault('NULL'),
+    zero: () => createDefault('0'),
+    one: () => createDefault('1'),
+    negativeOne: () => createDefault('-1'),
+    string: (value) => createDefault(`'${value.replace(/'/g, "''")}'`),
+    emptyString: () => createDefault(`''`),
+    number: (value) => createDefault(String(value)),
+    integer: (value) => createDefault(String(Math.floor(value))),
+};
